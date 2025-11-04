@@ -1,0 +1,5 @@
+creation_rules:
+  - pgp: "B57822CEBBF7C27C196DB7D3D9DF0BD2C91CBE98"
+    encrypted_regex: ^(?i)(.*(_)?(password|secret|token|endpoint|key|client.?id|uri|url|username|host|domain).*)$
+    paths:
+      - "application*.yaml"

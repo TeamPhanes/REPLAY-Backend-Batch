@@ -1,0 +1,36 @@
+spring:
+    application:
+        name: replay-batch
+    profiles:
+        active: local
+sops:
+    kms: []
+    gcp_kms: []
+    azure_kv: []
+    hc_vault: []
+    age: []
+    lastmodified: "2025-11-04T11:55:33Z"
+    mac: ENC[AES256_GCM,data:IsYPmsis6qtXT1llhvKXfqIirES7H/Ti4ss6oAUpY5UUbCbLyJSkJZwgHN69knyjIAKAZPLEnwO8UJEGht8XeVHLdiViZmIqRXDR1GyOhofrvwOu+PV1lO39r5H3HL9SEljNxLHcLfJCV0wOurBXoU+fazoc+qPT61W5bHGDtIM=,iv:yjoS46ieX4p43ht0vVpBT5kgtqmJKaVEq1or0q6v16M=,tag:L89bamViR/uLtSrsX4+2Vw==,type:str]
+    pgp:
+        - created_at: "2025-11-04T11:55:33Z"
+          enc: |-
+            -----BEGIN PGP MESSAGE-----
+
+            hQIMA0pEQ+ak5/eRARAAsVCyrsZkoSsO7CscDsKFhk32mk77hsHXWSaDy+z/Zx59
+            l+tE67vR0hhmk8FklY4kB7WWBeK49QPlg3IzYgjeMIB4tR9tkNMKqem7uSNpFeYx
+            sZVAtlpGfqpDIi7OfTfYVx1LnlMgKOc7C5vi5g2CPv8oHG+D8uDYHdBZk8bWfvkl
+            E7nAJZXjIUhhyMVJAckEFuCJPrxZyVexXl8JFwzkULy/dcUA2YblPu2QZGmJ2YLu
+            qgMhDS34/LG0uyLtLYH2tmVS5vTx61fAHIDx5aWq22xSH+aynTgKqyU9Q3rGYCNm
+            pjWkQg+GzpP/ysEz6jJ2WcuES7srPwg/a891i62TZzMOgLtT7MUQPsKCIFUSc9mE
+            yCcWTtquigiTEqXCDlpS1dZ+oryrW21kM83hWkRpcH9gIk7HT7VTbZOgqUZrZshF
+            E4Jaf7gyuJJrcDlRIWFJAFukjD9t3WFpfb9XlIiSzAU98a9lh8xZhGoDSavyG62Z
+            GdaSAO6dinO6k71PzyHjhhppLQGDaJEtBb4p8eqRuTn18c9xar/1CDrIO3wBDq9d
+            XHJe//OH7k4awZ0onExBNUvOombxoyvbJC3zzddL2ZXVQ9yV8gk80xipyA2Q6z5d
+            PHvbKac1NDoCr2RWqr5lelD3/EYGpUrRPkrrK9ZS8t2M0R4/9ouwiiuvQROLp/TS
+            XgEDS+75S8xmIlpik8SjXgthbz0PA6I8JjwmmDPS/Jdro9RNabDNAmLKlSZMYi/3
+            3vYcIcaZbGIcmbFmgBM3GlMP6WF9ucbTGsc8Mgsr9gQu5mmMA9c/Kop8II751u8=
+            =8qAZ
+            -----END PGP MESSAGE-----
+          fp: B57822CEBBF7C27C196DB7D3D9DF0BD2C91CBE98
+    encrypted_regex: ^(?i)(.*(_)?(password|secret|token|endpoint|key|client.?id|uri|url|username|host|domain).*)$
+    version: 3.9.3
