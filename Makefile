@@ -2,7 +2,7 @@ REGISTRY := harbor.phanescloud.com
 
 GIT_SHA ?= $(shell git rev-parse --short HEAD)
 
-IMAGE_NAME := opensearch-sync
+IMAGE_NAME := batch
 IMAGE_PROJECT := replay
 IMAGE_TAG := $(BRANCH)-$(GIT_SHA)
 IMAGE := $(REGISTRY)/$(IMAGE_PROJECT)/$(IMAGE_NAME):$(IMAGE_TAG)
