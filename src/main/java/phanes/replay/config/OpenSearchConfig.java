@@ -18,15 +18,14 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.net.ssl.SSLContext;
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
 
 @Configuration
 public class OpenSearchConfig {
@@ -39,21 +38,19 @@ public class OpenSearchConfig {
     private String username;
     @Value("${opensearch.password}")
     private String password;
-    @Value("${opensearch.ssl:false}")
-    private boolean ssl;
     @Value("${opensearch.truststore.path}")
     private String trustStorePath;
     @Value("${opensearch.truststore.password}")
     private String trustStorePassword;
 
     @Bean
-    public OpenSearchClient openSearchClient() throws CertificateException, KeyStoreException, IOException, NoSuchAlgorithmException, KeyManagementException {
+    public OpenSearchClient openSearchClient() throws KeyStoreException, NoSuchAlgorithmException, KeyManagementException {
         final ApacheHttpClient5TransportBuilder transportBuilder = transportBuilder();
         final OpenSearchTransport transport = transportBuilder.build();
         return new OpenSearchClient(transport);
     }
 
-    private ApacheHttpClient5TransportBuilder transportBuilder() throws CertificateException, KeyStoreException, IOException, NoSuchAlgorithmException, KeyManagementException {
+    private ApacheHttpClient5TransportBuilder transportBuilder() throws KeyStoreException, NoSuchAlgorithmException, KeyManagementException {
         final HttpHost opensearchHost = new HttpHost("https", host, port);
         final BasicCredentialsProvider credentialsProvider = new BasicCredentialsProvider();
         credentialsProvider.setCredentials(
@@ -61,36 +58,32 @@ public class OpenSearchConfig {
                 new UsernamePasswordCredentials(username, password.toCharArray())
         );
         final ApacheHttpClient5TransportBuilder builder = ApacheHttpClient5TransportBuilder.builder(opensearchHost);
-        if (ssl) {
-            SSLContext sslContext = sslContext();
-            final DefaultClientTlsStrategy tlsStrategy = new DefaultClientTlsStrategy(sslContext, NoopHostnameVerifier.INSTANCE);
-            final PoolingAsyncClientConnectionManager connectionManager = PoolingAsyncClientConnectionManagerBuilder.create()
-                    .setTlsStrategy(tlsStrategy)
-                    .build();
-            builder.setHttpClientConfigCallback(httpClientBuilder -> httpClientBuilder
-                    .setDefaultCredentialsProvider(credentialsProvider)
-                    .setConnectionManager(connectionManager)
-            );
-        } else {
-            builder.setHttpClientConfigCallback(httpClientBuilder ->
-                    httpClientBuilder.setDefaultCredentialsProvider(credentialsProvider)
-            );
-        }
+        SSLContext sslContext = sslContext();
+        final DefaultClientTlsStrategy tlsStrategy = new DefaultClientTlsStrategy(sslContext, NoopHostnameVerifier.INSTANCE);
+        final PoolingAsyncClientConnectionManager connectionManager = PoolingAsyncClientConnectionManagerBuilder.create()
+                .setTlsStrategy(tlsStrategy)
+                .build();
+        builder.setHttpClientConfigCallback(httpClientBuilder -> httpClientBuilder
+                .setDefaultCredentialsProvider(credentialsProvider)
+                .setConnectionManager(connectionManager)
+        );
         return builder;
     }
 
-    private SSLContext sslContext() throws KeyStoreException, IOException, CertificateException, NoSuchAlgorithmException, KeyManagementException {
-        if (trustStorePath != null && !trustStorePath.isEmpty()) {
+    private SSLContext sslContext() throws KeyStoreException, NoSuchAlgorithmException, KeyManagementException {
+        try {
+            Path path = Paths.get(trustStorePath);
             KeyStore trustStore = KeyStore.getInstance("JKS");
-            try (InputStream is = Files.newInputStream(Paths.get(trustStorePath))) {
+            try (InputStream is = Files.newInputStream(path)) {
                 trustStore.load(is, trustStorePassword.toCharArray());
             }
             return SSLContexts.custom()
                     .loadTrustMaterial(trustStore, null)
                     .build();
+        } catch (Exception e) {
+            return SSLContexts.custom()
+                    .loadTrustMaterial(null, new TrustAllStrategy())
+                    .build();
         }
-        return SSLContexts.custom()
-                .loadTrustMaterial(null, new TrustAllStrategy())
-                .build();
     }
 }
