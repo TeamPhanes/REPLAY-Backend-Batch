@@ -37,8 +37,7 @@ public class ThemeReader extends AbstractPagingItemReader<ThemeDoc> {
                            'address', s.address
                    )                                                                  AS spot,
                    JSON_OBJECT('name', c.name)                                        AS cafe,
-                   COALESCE(JSON_ARRAYAGG(g.name), JSON_ARRAY()) AS genres,
-                   t.created_at
+                   COALESCE(JSON_ARRAYAGG(g.name), JSON_ARRAY()) AS genres
             FROM theme t
                      JOIN spot s ON s.id = t.spot_id
                      JOIN cafe c ON c.id = s.cafe_id
